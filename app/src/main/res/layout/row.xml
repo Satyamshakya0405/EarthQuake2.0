@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+
+        android:id="@+id/mag"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:text="Mag"
+        android:background="@drawable/circle_background"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+
+
+        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/place"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+        android:layout_weight="1"
+
+        android:text="Place"
+
+        />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Place"
+        android:layout_marginLeft="16dp"
+
+        />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Date Time"
+        android:layout_marginLeft="16dp"
+        />
+        </LinearLayout>
+</LinearLayout>
