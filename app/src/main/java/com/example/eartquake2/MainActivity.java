@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     EarthquakeAdapter adapter;
     TextView emptyview;
     ProgressBar mProggbar;
+    SwipeRefreshLayout mSwipeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ListView mlistview = findViewById(R.id.list);
          emptyview=findViewById(R.id.emptyview);
         mProggbar=findViewById(R.id.Progressbar);
+        mSwipeLayout=findViewById(R.id.mswipelayout);
         adapter = new EarthquakeAdapter(this, new ArrayList<Eathquakehelperclass>());
         mlistview.setAdapter(adapter);
         mlistview.setEmptyView(findViewById(R.id.emptyview));
@@ -77,6 +80,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+               mSwipeLayout.setRefreshing(true);
+                updateUi();
+
+            }
+        });
+
     }
 
     @Override
@@ -133,14 +145,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<ArrayList<Eathquakehelperclass>> loader, ArrayList<Eathquakehelperclass> data) {
         adapter.clear();
-        if(data==null)
+        mSwipeLayout.setRefreshing(false);
+        if(data==null||data.isEmpty())
         {
             mProggbar.setVisibility(View.INVISIBLE);
             emptyview.setText("No Data Found");
             Log.d("sattu","No data");
         }
         else if(data!=null){
-            mProggbar.setVisibility(View.GONE);
+            mProggbar.setVisibility(View.INVISIBLE);
             adapter.addAll(data);
 
         }
@@ -174,4 +187,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    public void updateUi()
+    {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        LoaderManager.LoaderCallbacks<ArrayList<Eathquakehelperclass>> callback = MainActivity.this;
+        if(networkInfo==null)
+        {
+            mSwipeLayout.setRefreshing(false);
+            mProggbar.setVisibility(View.INVISIBLE);
+            adapter.clear();
+            emptyview.setText("No Internet");
+            Log.d("sattu","NO INTERNET");
+        }
+        else
+            getSupportLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, callback);
+
+    }
 }
